@@ -89,20 +89,20 @@ public class BIP32Keystore: AbstractKeystore {
     /// - Parameter password: Password used to encrypt your private key
     /// - Parameter prefixPath: HDNode path. default: "m/44'/60'/0'/0" (Metamask prefix)
     /// Shouldn't throw if you generate your mnemonics
-    public convenience init(mnemonics: Mnemonics, password: String = "BANKEXFOUNDATION", prefixPath: String = HDNode.defaultPathMetamaskPrefix) throws {
+    public convenience init(mnemonics: Mnemonics, password: String = "BANKEXFOUNDATION", prefixPath: String = HDNode.defaultPathMetamaskPrefix, aesMode: String = "aes-128-cbc") throws {
         var seed = mnemonics.seed()
         defer { Data.zero(&seed) }
-        try self.init(seed: seed, password: password, prefixPath: prefixPath)
+        try self.init(seed: seed, password: password, prefixPath: prefixPath, aesMode: aesMode)
     }
 
     /// Init with seed
     /// - Parameter seed: Seed that need to generate your account
     /// - Parameter password: Password used to encrypt your private key
     /// - Parameter prefixPath: HDNode path. default: "m/44'/60'/0'/0" (Metamask prefix)
-    public init(seed: Data, password: String = "BANKEXFOUNDATION", prefixPath: String = HDNode.defaultPathMetamaskPrefix) throws {
+    public init(seed: Data, password: String = "BANKEXFOUNDATION", prefixPath: String = HDNode.defaultPathMetamaskPrefix, aesMode: String = "aes-128-cbc") throws {
         let prefixNode = try HDNode(seed: seed).derive(path: prefixPath, derivePrivateKey: true)
         rootPrefix = prefixPath
-        try createNewAccount(parentNode: prefixNode, password: password)
+        try createNewAccount(parentNode: prefixNode, password: password, aesMode: aesMode)
     }
     
     /**
